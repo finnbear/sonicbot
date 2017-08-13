@@ -10,13 +10,16 @@ int sonicTriggerPin = 4;
 int sonicEchoPin = 7;
 Servo sonicServo;
 
-int sonicServoIncrement = 15;
+int sonicServoIncrement = 5;
 int sonicServoMin = 10;
 int sonicServoMax = 170;
 int sonicSteps;
 
 void setup() {
   Serial.begin(9600);
+  while (!Serial) {
+    
+  }
   
   pinMode(leftMotorDirectionPin, OUTPUT);
   pinMode(leftMotorSpeedPin, OUTPUT);
