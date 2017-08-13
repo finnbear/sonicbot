@@ -11,8 +11,8 @@ int sonicEchoPin = 7;
 Servo sonicServo;
 
 int sonicServoIncrement = 5;
-int sonicServoMin = 10;
-int sonicServoMax = 150;
+int sonicServoMin = 0;
+int sonicServoMax = 130;
 int sonicSteps;
 
 void setup() {
@@ -78,6 +78,12 @@ void normalize(long *testAveraged, float *testNormalized) {
     }
   }
 
+  Serial.print("Min: ");
+  Serial.println(testMin);
+
+  Serial.print("Max: ");
+  Serial.println(testMax);
+
   for (int i = 0; i < sonicSteps; i++) {
     testNormalized[i] = map(testAveraged[i], testMin, testMax, 0, 1000L) / (float)1000;
   }
@@ -88,8 +94,8 @@ void loop() {
 
   scan(testAveraged);
 
+  Serial.print("Averages: ");
   for (int i = 0; i < sonicSteps; i++) {
-    Serial.print("Averages: ");
     Serial.print(testAveraged[i]);
     Serial.print(", ");
   }
@@ -100,8 +106,8 @@ void loop() {
 
   normalize(testAveraged, testNormalized);
 
+  Serial.print("Normals: ");
   for (int i = 0; i < sonicSteps; i++) {
-    Serial.print("Normals: ");
     Serial.print(testNormalized[i]);
     Serial.print(", ");
   }
