@@ -85,7 +85,7 @@ void normalize(long *testAveraged, float *testNormalized) {
   Serial.println(testMax);
 
   for (int i = 0; i < sonicSteps; i++) {
-    testNormalized[i] = map(testAveraged[i], testMin, testMax, 0, 1000L) / (float)1000;
+    testNormalized[i] = (float)(testAveraged[i] - testMin) / (testMax - testMin);
   }
 }
 
