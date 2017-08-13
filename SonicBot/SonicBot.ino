@@ -12,15 +12,10 @@ Servo sonicServo;
 
 int sonicServoIncrement = 5;
 int sonicServoMin = 10;
-int sonicServoMax = 170;
+int sonicServoMax = 150;
 int sonicSteps;
 
 void setup() {
-  Serial.begin(9600);
-  while (!Serial) {
-    
-  }
-  
   pinMode(leftMotorDirectionPin, OUTPUT);
   pinMode(leftMotorSpeedPin, OUTPUT);
   pinMode(rightMotorDirectionPin, OUTPUT);
@@ -31,8 +26,14 @@ void setup() {
   pinMode(sonicEchoPin, INPUT);
 
   sonicServo.attach(sonicServoPin);
+  sonicServo.write(90);
 
   sonicSteps = (sonicServoMax - sonicServoMin) / sonicServoIncrement;
+
+  Serial.begin(9600);
+  while (!Serial) {
+    
+  }
 }
 
 int ping(int angle) {
@@ -45,7 +46,7 @@ int ping(int angle) {
   delayMicroseconds(5);
   digitalWrite(sonicTriggerPin, LOW);
 
-  return pulseIn(sonicEchoPin, HIGH);
+  return pulseIn(sonicEchoPin, HIGH) / 50 / 2;
 }
 
 void scan(long *testAveraged) {
@@ -64,7 +65,7 @@ void scan(long *testAveraged) {
 }
 
 void normalize(long *testAveraged, float *testNormalized) {
-  long testMin = 1000l * 1000l;
+  long testMin = 2147483647L;
   long testMax = 0;
 
   for (int i = 0; i < sonicSteps; i++) {
@@ -78,7 +79,7 @@ void normalize(long *testAveraged, float *testNormalized) {
   }
 
   for (int i = 0; i < sonicSteps; i++) {
-    testNormalized[i] = map(testAveraged[i], testMin, testMax, 0, 1000) / (float)1000;
+    testNormalized[i] = map(testAveraged[i], testMin, testMax, 0, 1000L) / (float)1000;
   }
 }
 
@@ -86,12 +87,21 @@ void loop() {
   long testAveraged[sonicSteps];
 
   scan(testAveraged);
+
+  for (int i = 0; i < sonicSteps; i++) {
+    Serial.print("Averages: ");
+    Serial.print(testAveraged[i]);
+    Serial.print(", ");
+  }
+
+  Serial.println("");
   
   float testNormalized[sonicSteps];
 
   normalize(testAveraged, testNormalized);
 
   for (int i = 0; i < sonicSteps; i++) {
+    Serial.print("Normals: ");
     Serial.print(testNormalized[i]);
     Serial.print(", ");
   }
