@@ -78,7 +78,7 @@ void normalize(long *testAveraged, float *testNormalized) {
   }
 
   for (int i = 0; i < sonicSteps; i++) {
-    testNormalized[i] = map(testAveraged[i], testMin, testMax, 0, 1);
+    testNormalized[i] = map(testAveraged[i], testMin, testMax, 0, 1000) / (float)1000;
   }
 }
 
